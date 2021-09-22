@@ -1,0 +1,34 @@
+---
+title: "Project 1 - Task 1"
+author: "Brandon Ritchie"
+date: "9/22/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+#Uncomment and run the line below once in the console to get the devtools package.
+#install.packages("devtools")
+
+#Uncomment and run the line below once in the console to get the data4led package.
+#devtools::install_github("byuidatascience/data4led") 
+
+#Use the code below to load the data4led package to your current R session.
+library(data4led)
+
+#After entering the seed from the class list of seeds, use the code below to load the data for one randomly selected bulb. 
+bulb <- led_bulb(1,seed = 7098)
+#Setting the seed fixes which randomly selected bulb you will use.
+#This makes your work reproducible.
+```
+
+The following graph shows the relationship between the lumen percent intensity and hours used. The data given is for the hours of 0-5000. 
+
+```{r}
+plot(percent_intensity~hours, data = bulb, xlab = "Hours", ylab = "Intensity (%)", pch = 20)
+```
+
+We can see that the plot the plot seems to follow a slight parabolic curve with the apex reaching at approximately 4000 hours. If we were to expand the x-axis, we would expect a gradual descent in intensity from 5000 hours on. 
