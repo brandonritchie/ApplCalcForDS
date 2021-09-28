@@ -1,0 +1,49 @@
+---
+title: "Task 2 Project 1"
+author: "Brandon Ritchie"
+date: "9/28/2021"
+output: html_document
+---
+
+## Introduction
+
+We are going to analyse the functions $f_3(x) = a_0 + a_1e^{-a_2x}$ and $f_5(x) = (a_0+a_1x)e^{-a_2x}$. We are going to answer the question, what happens to the transformation of each function as we change $a_0$, $a_1$, and $a_2$.
+
+## Function 3
+
+For our first function lets first analyse what happens when we change $a_0$. In this case $a_0$ is acting as a constant that controls the location of the horizontal asymptote. If $a_1 \neq 0$ and $a_2 \neq 0$ and say our $a_0 = 35$, then our line will approach 35 (either negative or positive depending on a2 and a1), but will never reach it. In other words, as the $a_0$ value increases the graph will shift upwards and vice versa.
+
+The $a_1$ value controls the rate of the exponential function. If $a_2$ were a negative number, the larger the $a_1$ value is, the more compressed the line will be to the y-axis in quadrant 1.
+
+```{r}
+x <- seq(-2000, 2000, 100)
+
+fun1 <- function(a, b, c, x){
+  a + b*exp(-c*x)
+}
+par(mfrow = 1:2)
+plot(x, fun1(17.5,10,-0.0022,x), type = "l", lwd = 4, xlim = c(-2000,2000), ylim = c(0,800), ylab = "Y", xlab = "X", main = "a1 = 10 & a2 = -0.0022")
+abline(v = 0, h = 0, lwd = 2)
+plot(x, fun1(17.5,4,-0.0022,x), type = "l", lwd = 4, xlim = c(-2000,2000), ylim = c(0,800), ylab = "Y", xlab = "X", main = "a1 = 4 & a2 = -0.0022")
+abline(v = 0, h = 0, lwd = 2)
+```
+
+$a_2$ on the other hand controls both the compression and the direction of the asymptote. For example if $a_2 > 0$ and $x > 0$ thnn e will be raised to a negative exponent $e^{-x}$. This means that for all positive values, f(x) will get infinitely smaller and will approach the $a_0$ value. For all negative values, f(x) will get infinitely larger at $e^x$ rate. We can see this in the chart below.
+
+```{r}
+x <- seq(-2000, 2000, 100)
+
+fun1 <- function(a, b, c, x){
+  a + b*exp(-c*x)
+}
+par(mfrow = 1:2)
+plot(x, fun1(17.5,10,0.0022,x), type = "l", lwd = 4, xlim = c(-2000,2000), ylim = c(0,800), ylab = "Y", xlab = "X", main = "a1 = 10 & a2 = 0.0022")
+abline(v = 0, h = 0, lwd = 2)
+plot(x, fun1(17.5,10,-0.0022,x), type = "l", lwd = 4, xlim = c(-2000,2000), ylim = c(0,800), ylab = "Y", xlab = "X", main = "a1 = 10 & a2 = -0.0022")
+abline(v = 0, h = 0, lwd = 2)
+```
+
+## Function 5
+
+
+
