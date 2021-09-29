@@ -45,5 +45,5 @@ abline(v = 0, h = 0, lwd = 2)
 
 ## Function 5
 
-
+This function is a little bit more complicated, however it has a lot of the same basic principles. In this formula $a_0$ also represents where the function is going to intercept the y-axis. We see a slight horizontal shift as we change this value as well.
 
