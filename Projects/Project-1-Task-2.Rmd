@@ -11,6 +11,10 @@ We are going to analyse the functions $f_3(x) = a_0 + a_1e^{-a_2x}$ and $f_5(x) 
 
 ## Function 3
 
+The function for this section is:
+
+$$f_3(x) = a_0 + a_1e^{-a_2x}$$
+
 For our first function lets first analyse what happens when we change $a_0$. In this case $a_0$ is acting as a constant that controls the location of the horizontal asymptote. If $a_1 \neq 0$ and $a_2 \neq 0$ and say our $a_0 = 35$, then our line will approach 35 (either negative or positive depending on a2 and a1), but will never reach it. In other words, as the $a_0$ value increases the graph will shift upwards and vice versa.
 
 The $a_1$ value controls the rate of the exponential function. If $a_2$ were a negative number, the larger the $a_1$ value is, the more compressed the line will be to the y-axis in quadrant 1.
@@ -45,5 +49,46 @@ abline(v = 0, h = 0, lwd = 2)
 
 ## Function 5
 
+The function for this section is:
+
+$$f_5(x) = (a_0+a_1x)e^{-a_2x}$$
+
 This function is a little bit more complicated, however it has a lot of the same basic principles. In this formula $a_0$ also represents where the function is going to intercept the y-axis. We see a slight horizontal shift as we change this value as well.
 
+In order to explain $a_1$ and $a_2$ lets reaarange the equation a little bit. Since $e^{-a_2x}$ has a negative exponent we can move it to the denominator and change the sign of the exponent. The new function looks as follows:
+
+$$\frac{a_0+a_1x}{e^{a2x}}$$
+
+If we look at this as $a_1$ for all positive domains, we can see that $a_1$ effects the slope of the curve. The value in the numerator becomes larger as x increases thus increasing the value for the range. This causes a more shallow curve as values for $a_1$ approach 0 and a more steep curve as values approach $\infty$ and $-\infty$.
+
+```{r}
+x <- seq(-5000, 5000, 100)
+
+fun2 <- function(a, b, c, x){
+  (a + b*x)*exp(-c*x)
+}
+par(mfrow = 1:2)
+plot(x, fun2(0,0.1,0.003,x), type = "l", lwd = 4, xlim = c(-5000,5000), ylim = c(0,50), ylab = "Y", xlab = "X", main = "a1 = 0.1 & a2 = 0.003")
+abline(v = 0, h = 0, lwd = 2)
+plot(x, fun2(0,0.01,0.003,x), type = "l", lwd = 4, xlim = c(-5000,5000), ylim = c(0,50), ylab = "Y", xlab = "X", main = "a1 = 0.01 & a2 = 0.003")
+abline(v = 0, h = 0, lwd = 2)
+```
+
+As we can see in this graph, as the $a_1$ value decreases, the curve becomes more flat. This is because the rate in the denominator increases faster relative to the rate in the numerator for smaller $a_1$ values.
+
+Because our denominator contains a constant raised to exponent ($e^{a_2x}$), this value will increase at a higher rate for larger x values thus causing our downward slope. $a_2$ in this case effects how quickly this apex is reached. For smaller $a_2$ values, there is a larger area under the curve and the curve is stretched further along the x-axis, and for larger $a_2$ values, there is a much smaller area under the curve and it is compressed more on the x-axis.
+
+```{r}
+x <- seq(-5000, 10000, 100)
+
+fun2 <- function(a, b, c, x){
+  (a + b*x)*exp(-c*x)
+}
+par(mfrow = 1:2)
+plot(x, fun2(0,0.1,0.001,x), type = "l", lwd = 4, xlim = c(-5000,10000), ylim = c(0,50), ylab = "Y", xlab = "X", main = "a1 = 0.1 & a2 = 0.001")
+abline(v = 0, h = 0, lwd = 2)
+plot(x, fun2(0,0.1,0.005,x), type = "l", lwd = 4, xlim = c(-5000,10000), ylim = c(0,50), ylab = "Y", xlab = "X", main = "a1 = 0.1 & a2 = 0.005")
+abline(v = 0, h = 0, lwd = 2)
+```
+
+As we can see in this graph, the relative shape of the the curve does not change as we increase $a_2$, however it does become compressed on the x-axis and the area under the curve decreases.
