@@ -1,0 +1,40 @@
+---
+title: "Project 1 Task 4"
+author: "Brandon Ritchie"
+date: "10/19/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, message = FALSE, warning = FALSE}
+f0 <- function(a,x){(a * x)/x}
+f1 <- function(x){100 + 0.0005 * x}
+f2 <- function(x, a0, a1, a2){a0 + a1 * x + a2 *x^2}
+f3 <- function(x,a0,a1,a2){a0 + a1*exp(-a2*x)}
+f4 <- function(x,a0,a1,a2){a0+a1*x+a2*log(0.005*x+1)}
+f5 <- function(x,a0,a1,a2){(a0+a1*x)*exp(-a2*x)}
+```
+
+## Function 1
+
+The first function is $f_0(t;a_0)=a_0$. Since $a_0$ is $a_0 = 101$, if you try and plug in an intensity of 80 and solve for x you do not get an answer because $80 \neq 100$.
+
+## Function 2
+
+The second function is $f_1(t;a_0,a_1) = a_0 + a_1t$ with parameters $a_0 = 100$ and $a_1 = 0.0005$. If we x-axis is not extended beyond 0 in the negative direction, then we do not get an answer. If we do we can use uniroot and get the following answer:
+
+```{r}
+uniroot(function(x){20 + 0.0005 * x}, c(-41000,-39000))$root
+```
+
+## Function 3
+
+
+
+```{r}
+
+```
+
