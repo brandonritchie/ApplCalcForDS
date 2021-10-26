@@ -7,6 +7,33 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+
+```{r}
+library(data4led)
+
+bulb <- led_bulb(1,seed = 7098)
+```
+
 ## How long does an LED Lightbulb Last?
 
-In 2008 the department of energy launched an initiative that would award a prize to a lightbulb that had a lifetime longer than 25,000 hours. For this project we are given data on a given lightbub for the first 5,000 hours plotted on its given intensity. We want to predict the luminosity lifecycle for our given bulb by testing six different functions and altering each of their given paramaters. This is done mainly by eyeballing and seeing which paramaters allow for the "best fit". In this case "best fit" is represented by a function that passes through the middle of the data. In a regression this may be accomplished by decreasing the sum of squared residuals.  
+In 2008 the department of energy launched an initiative that would award a prize to a lightbulb that had a lifetime longer than 25,000 hours. For this project we are given data on a given lightbub for the first 5,000 hours plotted on its given intensity. We want to predict the luminosity lifecycle for our given bulb by testing six different functions and altering each of their given paramaters. This is done mainly by eyeballing and seeing which paramaters allow for the "best fit". In this case "best fit" is represented by a function that passes through the middle of the data. In a regression this may be accomplished by decreasing the sum of squared residuals.
+
+The data we have looks as follows:
+
+```{r}
+plot(percent_intensity~hours, data = bulb, xlab = "Hours", ylab = "Intensity (%)", pch = 20)
+```
+
+
+The fitted models that were determined are the following:
+
+$f_0(t;a_0 = 100)= 100$
+
+$f_1(t;a_0 = 100, a_1 = 0.0005) = 100 + 0.0005t$
+
+$f_2(t;a_0 = 100, a_1 = 0.0005, a_2 = -0.00000001) = 100 + 0.0005t+-0.00000001t^2$
+
+$f_3(t;a_0 = 101.5, a_1 = -1.5, a_2 = 0.0006) = 101.5 + -1.5e^{-0.0006t}$
+
+$f_4(t;a_0 = 100, a_1 = -0.000002, a_2 = 0.46) = 100 + -0.000002t+0.46ln(0.005t + 1)$
+
