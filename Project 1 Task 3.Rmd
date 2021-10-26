@@ -28,7 +28,7 @@ In this analysis we are going to visually fit six different models to set of dat
 
 ## Model 1 
 
-This first model is very simple. It is $f_0(t;a_0)=a_0$. We must fit a line that will best represent the data. For this model I set $a_0 = 101$. This suggests that no matter what the hour of the lightbulbs lifetime, the intensity will be 101%.
+This first model is very simple. It is $f_0(t;a_0)=a_0$. We must fit a line that will best represent the data. For this model I set $a_0 = 100$. This suggests that no matter what the hour of the lightbulbs lifetime, the intensity will be 100%.
 
 ```{r, message = FALSE, warning = FALSE}
 x <- seq(0,80000,5)

@@ -182,7 +182,7 @@ f5 &lt;- function(x,a0,a1,a2){(a0+a1*x)*exp(-a2*x)}</code></pre>
 </div>
 <div id="model-1" class="section level2">
 <h2>Model 1</h2>
-<p>This first model is very simple. It is <span class="math inline">\(f_0(t;a_0)=a_0\)</span>. We must fit a line that will best represent the data. For this model I set <span class="math inline">\(a_0 = 101\)</span>. This suggests that no matter what the hour of the lightbulbs lifetime, the intensity will be 101%.</p>
+<p>This first model is very simple. It is <span class="math inline">\(f_0(t;a_0)=a_0\)</span>. We must fit a line that will best represent the data. For this model I set <span class="math inline">\(a_0 = 100\)</span>. This suggests that no matter what the hour of the lightbulbs lifetime, the intensity will be 100%.</p>
 <pre class="r"><code>x &lt;- seq(0,80000,5)
 
 par(mfrow = 1:2)
