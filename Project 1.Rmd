@@ -18,7 +18,7 @@ bulb <- led_bulb(1,seed = 7098)
 
 In 2008 the department of energy launched an initiative that would award a prize to a lightbulb that had a lifetime longer than 25,000 hours. For this project we are given data on a given lightbub for the first 5,000 hours plotted on its given intensity. We want to predict the luminosity lifecycle for our given bulb by testing six different functions and altering each of their given paramaters. This is done mainly by eyeballing and seeing which paramaters allow for the "best fit". In this case "best fit" is represented by a function that passes through the middle of the data. In a regression this may be accomplished by decreasing the sum of squared residuals.
 
-The data we have looks as follows:
+The data for the first 5000 hours looks like the following:
 
 ```{r}
 plot(percent_intensity~hours, data = bulb, xlab = "Hours", ylab = "Intensity (%)", pch = 20)
