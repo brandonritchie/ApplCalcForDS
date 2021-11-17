@@ -1,0 +1,72 @@
+---
+title: "Project 2 Task 3"
+author: "Brandon Ritchie"
+date: "11/17/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+#If needed, refer to Project 1 Task 1 to install the data4led package.
+library(data4led)
+
+#Change the DDDD below to your assigned seed, and then load the data for that randomly selected bulb. 
+#This is part of what makes your work reproducible.
+bulb <- led_bulb(1,seed = 7098)
+```
+
+## Maximum Likelihood Method for Function 1
+
+We will consider the model $f_1(t; a_1) = 100 + a_1t$. The loglikelihood for this function will be as follows:
+
+$$\ell_1(a_1; \mathbf{t}, \mathbf{y}) = 44\ln(\frac{1}{\sqrt{2\pi}}) + -\frac{1}{2}\sum_i^{44}-(y_i - 100-a_1t_i)^2$$
+
+We want to find the maximum of $\ell_1$ so we will take the derivative with repect to $a_1$. This was done with the following hand calculation:
+
+![](first_deriv_1.jpg)
+
+To find the critical point we will set the derivative equal to 0 and solve for $a_1$. When it is simplified we get the following function:
+
+$$a_1 = \frac{\sum{y_i-100}}{\sum{t_i}}$$
+
+```{r}
+t <- bulb$hours
+y <- bulb$percent_intensity
+
+a1 <- sum(y - 100) / sum(t)
+```
+
+When we plug it into R we get a critical point of $0.0004728455$. We can now do the second derivative test to calculate whether this is a local minima or maxima. The following image shows the calculation for the second derivative:
+
+![](second_deriv_1.jpg)
+
+```{r}
+-sum(t^2)
+```
+
+We get $-328,767,530$ for the second derivative test, so we know that we have a maximum.
+
+We will now fit it visually:
+
+```{r}
+f1 <- function(x,a1=0){
+  100 + a1*x
+}
+
+x <- seq(-10,80001,2)
+par(mfrow=c(1,2),mar=c(2.5,2.5,1,0.25))
+plot(t,y,xlab="Hour ", ylab="Intensity(%) ", pch=16,main='f1')
+lines(x,f1(x,a1),col=2)
+plot(t,y,xlab="Hour ", ylab="Intensity(%) ", pch=16, xlim = c(-10,80000),ylim = c(-10,120))
+lines(x,f1(x,a1),col=2)
+
+```
+
+## Maximum Likelihood Method for Function 4
+
+We will consider the model $f_4(t; a_1,a_2) = 100 + a_1t + a_2\ln(0.005t+1)$. The loglikelihood function for this model is as follows:
+
+$$$$

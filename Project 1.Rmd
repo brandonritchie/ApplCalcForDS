@@ -24,16 +24,105 @@ The data for the first 5000 hours looks like the following:
 plot(percent_intensity~hours, data = bulb, xlab = "Hours", ylab = "Intensity (%)", pch = 20)
 ```
 
+## The Models
 
-The fitted models that were determined are the following:
+The fitted models that were determined are the following with their associated graphs and stories:
+
+```{r, message = FALSE, warning = FALSE}
+f0 <- function(a,x){(a * x)/x}
+f1 <- function(x, a0, a1){a0 + a1 * x}
+f2 <- function(x, a0, a1, a2){a0 + a1 * x + a2 *x^2}
+f3 <- function(x,a0,a1,a2){a0 + a1*exp(-a2*x)}
+f4 <- function(x,a0,a1,a2){a0+a1*x+a2*log(0.005*x+1)}
+f5 <- function(x,a0,a1,a2){(a0+a1*x)*exp(-a2*x)}
+```
 
 $f_0(t;a_0 = 100)= 100$
 
+This model suggests that no matter what the hour of the lightbulbs lifetime, the intensity will be 100%.
+
+```{r, message = FALSE, warning = FALSE}
+x <- seq(0,80000,5)
+
+par(mfrow = 1:2)
+plot(percent_intensity~hours, data = bulb, xlab = "Hours", ylab = "Intensity (%)", pch = 20)
+curve(f0(100, x), add = TRUE)
+
+plot(percent_intensity~hours, data = bulb, xlab = "Hours", ylab = "Intensity (%)", pch = 20, xlim = c(0,80000), ylim = c(0,120))
+curve(f0(100, x), add = TRUE)
+```
+
 $f_1(t;a_0 = 100, a_1 = 0.0005) = 100 + 0.0005t$
+
+This model suggests that for every hour increase in a bulb's lifetime, the average percent intensity will increase by 0.0005% for the rest of time.
+
+```{r, message = FALSE, warning = FALSE}
+par(mfrow = 1:2)
+plot(percent_intensity~hours, data = bulb, xlab = "Hours", ylab = "Intensity (%)", pch = 20)
+curve(f1(x, 100,0.0005), add = TRUE)
+
+plot(percent_intensity~hours, data = bulb, xlab = "Hours", ylab = "Intensity (%)", pch = 20, xlim = c(0,80000), ylim = c(0,120))
+curve(f1(x, 100,0.0005), add = TRUE)
+```
 
 $f_2(t;a_0 = 100, a_1 = 0.0005, a_2 = -0.00000001) = 100 + 0.0005t+-0.00000001t^2$
 
+This mosel suggests that the average intensity will increase for approximately the first 30,000 hours of the bulb's life and then decline precipitously over the remainder of it's lifetime.
+
+```{r, message = FALSE, warning = FALSE}
+par(mfrow = 1:2)
+plot(percent_intensity~hours, data = bulb, xlab = "Hours", ylab = "Intensity (%)", pch = 20)
+curve(f2(x, 100,0.0005,-0.00000001), add = TRUE)
+
+plot(percent_intensity~hours, data = bulb, xlab = "Hours", ylab = "Intensity (%)", pch = 20, xlim = c(0,80000), ylim = c(0,120))
+curve(f2(x, 100,0.0005,-0.00000001), add = TRUE)
+```
+
 $f_3(t;a_0 = 101.5, a_1 = -1.5, a_2 = 0.0006) = 101.5 + -1.5e^{-0.0006t}$
+
+This suggests that over the first 5000 hours shown in the graph on the bottom left graph the average intensity increases at a decreasing rate until it reaches the $a_0$ value of 101.5. At that point the graph reaches a horizontal asymptote. This is like saying the intensity increases until it reaches 101.5% and then remains at that intensity forever.
+
+```{r, message = FALSE, warning = FALSE}
+par(mfrow = 1:2)
+plot(percent_intensity~hours, data = bulb, xlab = "Hours", ylab = "Intensity (%)", pch = 20)
+curve(f3(x, 101.5,-1.5,0.0006), add = TRUE)
+
+plot(percent_intensity~hours, data = bulb, xlab = "Hours", ylab = "Intensity (%)", pch = 20, xlim = c(0,80000), ylim = c(0,120))
+curve(f3(x, 101.5,-1.5,0.0006), add = TRUE)
+```
 
 $f_4(t;a_0 = 100, a_1 = -0.000002, a_2 = 0.46) = 100 + -0.000002t+0.46ln(0.005t + 1)$
 
+This model is similar to the previous model, where the intensity increases for the first 5000 hours and then reaches a constant rate at around 102% forever.
+
+```{r, message = FALSE, warning = FALSE}
+par(mfrow = 1:2)
+plot(percent_intensity~hours, data = bulb, xlab = "Hours", ylab = "Intensity (%)", pch = 20)
+curve(f4(x, 100,-0.000002,0.46), add = TRUE)
+
+plot(percent_intensity~hours, data = bulb, xlab = "Hours", ylab = "Intensity (%)", pch = 20, xlim = c(0,80000), ylim = c(0,120))
+curve(f4(x, 100,-0.000002,0.46), add = TRUE)
+```
+
+$f_5(t;a_0 = 100, a_1 = -0.001, a_2 = 0.0000055) = (100 + -0.001t)e^{-0.0000055t}$
+
+This model suggests that the lightbulb will last a very long time, increasing in intensity over the course of 80000 hours. Eventually, at some point past 80,000 hours the intensity will decrease.
+
+```{r, message = FALSE, warning = FALSE}
+par(mfrow = 1:2)
+plot(percent_intensity~hours, data = bulb, xlab = "Hours", ylab = "Intensity (%)", pch = 20)
+curve(f5(x, 100,0.001,0.0000055), add = TRUE)
+
+plot(percent_intensity~hours, data = bulb, xlab = "Hours", ylab = "Intensity (%)", pch = 20, xlim = c(0,80000), ylim = c(0,120))
+curve(f5(x, 100,0.001,0.0000055), add = TRUE)
+```
+
+## Model Summary
+
+As we can see, many of these models seem to make incorrect assumptions for predictions over 5000 hours. Because there is no data after 5,000 hours it is difficult to determine what the data will do. However over the course of 5,000 hours a few of these models can make realatively useful predictions. Models $f_3$, $f_4$, and $f_5$ are relatively accurate within that range. Beyond 5,000 hours, only models $f_2$, $f_3$, and $f_5$ seem possible because they are the only one's that account for some kind of decline in the future. However, it is impossible to determine which is the best because we do not have data that spans that far.
+
+## Project Reflection
+
+The mathematical idea that I learned was mainly tuning model paramaters and seeing how it changed the shape of a function.
+
+Soft skills that were needed/improved were Following Directions and Motivation.
