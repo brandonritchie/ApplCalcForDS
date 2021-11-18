@@ -24,7 +24,7 @@ We will consider the model $f_1(t; a_1) = 100 + a_1t$. The loglikelihood for thi
 
 $$\ell_1(a_1; \mathbf{t}, \mathbf{y}) = 44\ln(\frac{1}{\sqrt{2\pi}}) + -\frac{1}{2}\sum_i^{44}-(y_i - 100-a_1t_i)^2$$
 
-We want to find the maximum of $\ell_1$ so we will take the derivative with repect to $a_1$. This was done with the following hand calculation:
+We want to find the maximum of $\ell_1$ so we will take the derivative with respect to $a_1$. This was done with the following hand calculation:
 
 ![](first_deriv_1.jpg)
 
@@ -67,6 +67,35 @@ lines(x,f1(x,a1),col=2)
 
 ## Maximum Likelihood Method for Function 4
 
-We will consider the model $f_4(t; a_1,a_2) = 100 + a_1t + a_2\ln(0.005t+1)$. The loglikelihood function for this model is as follows:
+We will consider the model $f_4(t; a_1,a_2) = 100 + a_1t + a_2\ln(0.005t+1)$. The log likelihood function for this model is as follows:
 
-$$$$
+$$\ell(R) = 44\ln(\frac{1}{\sqrt{2\pi}})  -\frac{1}{2}\sum_i^{44}(100 + a_1t + a_2\ln(0.005t+1))^2$$
+
+We want to find the maximum of $\ell_4$ so we will take the partial derivative with respect to $a_1$ and $a_2$. This was done with the following hand calculations:
+
+![](partial_a1_4.jpg)
+
+![](partial_a2_4.jpg)
+
+We notice that these functions appear to take the following form:
+
+$$
+\left\{
+\begin{align*}
+b_1 - c_{11}a_1 - c_{12}a_2 &= 0 \\ 
+b_2 - c_{21}a_1 - c_{22}a_2 &= 0,
+\end{align*} 
+\right.
+$$
+
+We will calculate and store the variables:
+
+```{r}
+c.11 <- sum(t^2)
+c.12 <- sum(t * (log(0.005*t+1)^2))
+c.22 <- sum(log(0.005*t+1))
+c.21 <- sum(t * log(0.005 * t +1))
+b.1 <- sum((y-100)*t)
+b.2 <- sum(log(0.005 * t + 1) * (y - 100))
+```
+
