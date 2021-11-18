@@ -1,0 +1,184 @@
+---
+title: "Project 2"
+author: "Brandon Ritchie"
+date: "11/18/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+How long does an LED light bulb last? Experts analyzed several bulbs over the course of 5000 hours and recorded the bulb's luminoscity. Initially we fit the data visually with several different functions to see which one could potentially fit and describe the data the best. However, by using calculus we can minimize the squared error residuals and set the derivative/partial derivatives equal to 0. 
+
+## Functions
+
+The general models we used in this study are the following:
+
+$$f_1(t; a_1) = 100 + a_1t$$
+$$f_2(t; a_1,a_2) = 100 + a_1t + a_2t^2$$
+$$f_4(t; a_1,a_2) = 100 + a_1t + a_2\ln(0.005t+1)$$
+$$f_5(t; a_1) = 100e^{-0.00005t} + a_1te^{-0.00005t}$$
+$$f_6(t; a_1,a_2) = 100 + a_1t + a_2(1-e^{-0.0003t})$$
+
+We will fit each of these functions by applying the log likelihood function. For a given hour it gives the likelihood for a given error by summing the squared residuals of each given function. The form for applying the log likelihood function to a function is as follows with O being the number of observations and R being the residual ($y_i - f(x)$):
+
+$$\ell(R, O) = O\ln(\frac{1}{\sqrt{2\pi}}) + -\frac{1}{2}\sum_i^{O}-(R)^2$$
+The following are the fitted models:
+
+$$\ell_1(a_1; \mathbf{t},\mathbf{y}) = 44\ln\left(\frac{1}{\sqrt{2\pi}}\right) - \frac{1}{2}\sum_{i}^{44} (y_i - 100 - a_1t_i)^2$$
+
+$$\ell_2(a_1,a_2; \mathbf{t},\mathbf{y}) = 44\ln\left(\frac{1}{\sqrt{2\pi}}\right) - \frac{1}{2}\sum_{i}^{44} (y_i - 100 - a_1t_i - a_2t_i^2)^2$$
+
+$$\ell_4(a_1,a_2; \mathbf{t},\mathbf{y}) = 44\ln\left(\frac{1}{\sqrt{2\pi}}\right) - \frac{1}{2}\sum_{i}^{44} (y_i - 100 - a_1t_i - a_2\ln(0.005t_i+1))^2$$
+
+$$\ell_5(a_1; \mathbf{t},\mathbf{y}) = 44\ln\left(\frac{1}{\sqrt{2\pi}}\right) - \frac{1}{2}\sum_{i}^{44} (y_i - 100e^{-0.00005t_i} - a_1t_ie^{-0.00005t_i})^2$$
+
+$$\ell_6(a_1,a_2; \mathbf{t},\mathbf{y}) = 44\ln\left(\frac{1}{\sqrt{2\pi}}\right) - \frac{1}{2}\sum_{i}^{44} (y_i - 100 - a_1t_i - a_2(1-e^{-0.0003t}))^2$$
+
+## Optimizing and Fitting the models
+
+By taking the derivatives of these functions we can find the optimized $a_1$ and $a_2$ paramaters. Below are the optimized functions along with their fit to the data:
+
+$f_1(t; a_1) = 100 + 0.0004728455t$
+
+```{r}
+library(data4led)
+
+#Change the DDDD below to your assigned seed, and then load the data for that randomly selected bulb. 
+#This is part of what makes your work reproducible.
+bulb <- led_bulb(1,seed = 7098)
+
+f1 <- function(x,a1=0){
+  100 + a1*x
+}
+
+t <- bulb$hours
+y <- bulb$percent_intensity
+
+a1 <- sum(y - 100) / sum(t)
+
+x <- seq(-10,80001,2)
+par(mfrow=c(1,2),mar=c(2.5,2.5,1,0.25))
+plot(t,y,xlab="Hour ", ylab="Intensity(%) ", pch=16,main='f1')
+lines(x,f1(x,a1),col=2)
+plot(t,y,xlab="Hour ", ylab="Intensity(%) ", pch=16, xlim = c(-10,80000),ylim = c(-10,120))
+lines(x,f1(x,a1),col=2)
+```
+
+$f_2(t; a_1,a_2) = 100 + a_1t + a_2t^2$
+
+```{r}
+c.11 <- sum(t^2)
+c.12 <- sum(t^3)
+c.22 <- sum(t^4)
+b.1 <- sum((y-100)*t)
+b.2 <- sum((y-100)*t^2)
+
+best.a2 <- (c.11*b.2 - c.12*b.1)/(c.11*c.22 - c.12^2) 
+best.a1 <- (b.1 - c.12*best.a2)/c.11 
+
+f2 <- function(x,a0=0,a1=0,a2=1){
+  a0 + a1*x + a2*x^2
+}
+
+a0 <- 100
+a1 <- best.a1
+a2 <- best.a2
+
+x <- seq(-10,80001,2)
+par(mfrow=c(1,2),mar=c(2.5,2.5,1,0.25))
+plot(t,y,xlab="Hour ", ylab="Intensity(%) ", pch=16,main='f2')
+lines(x,f2(x,a0,a1,a2),col=2)
+plot(t,y,xlab="Hour ", ylab="Intensity(%) ", pch=16, xlim = c(-10,80000),ylim = c(-10,120))
+lines(x,f2(x,a0,a1,a2),col=2)
+```
+
+$f_4(t; a_1,a_2) = 100 + a_1t + a_2\ln(0.005t+1)$
+
+```{r}
+c.11 <- sum(t^2)
+c.12 <- sum(t * (log(0.005*t+1)))
+c.22 <- sum(log(0.005*t+1)^2)
+c.21 <- sum(t * log(0.005 * t +1))
+b.1 <- sum((y-100)*t)
+b.2 <- sum(log(0.005 * t + 1) * (y - 100))
+
+best.a2 <- (c.11*b.2 - c.12*b.1)/(c.11*c.22 - c.12^2) 
+best.a1 <- (b.1 - c.12*best.a2)/c.11 
+
+f4 <- function(x,a0=0,a1=0,a2=1){
+  a0 + a1*x + a2*log(0.005*x+1)
+}
+
+a0 <- 100
+a1 <- best.a1
+a2 <- best.a2
+
+x <- seq(-10,80001,2)
+par(mfrow=c(1,2),mar=c(2.5,2.5,1,0.25))
+plot(t,y,xlab="Hour ", ylab="Intensity(%) ", pch=16,main='f4')
+lines(x,f4(x,a0,a1,a2),col=2)
+plot(t,y,xlab="Hour ", ylab="Intensity(%) ", pch=16, xlim = c(-10,80000),ylim = c(-10,120))
+lines(x,f4(x,a0,a1,a2),col=2)
+```
+
+$f_5(t; a_1) = 100e^{-0.00005t} + a_1te^{-0.00005t}$
+
+```{r}
+best.a1 <- sum((t * exp(-0.00005*t))*(y-100*exp(-0.00005*t))) / sum((t*exp(-0.00005*t))^2)
+
+f5 <- function(x,a0=0,a1=0){
+  a0*exp(-0.00005*x) + a1*x*exp(-0.00005*x)
+}
+
+a0 <- 100
+a1 <- best.a1
+
+x <- seq(-10,80001,2)
+par(mfrow=c(1,2),mar=c(2.5,2.5,1,0.25))
+plot(t,y,xlab="Hour ", ylab="Intensity(%) ", pch=16,main='f5')
+lines(x,f5(x,a0,a1),col=2)
+plot(t,y,xlab="Hour ", ylab="Intensity(%) ", pch=16, xlim = c(-10,80000),ylim = c(-10,120))
+lines(x,f5(x,a0,a1),col=2)
+```
+
+$f_6(t; a_1,a_2) = 100 + a_1t + a_2(1-e^{-0.0003t})$
+
+```{r}
+c.11 <- sum(t^2)
+c.12 <- sum(t*(1-exp(-0.0003*t)))
+c.22 <- sum((1-exp(-0.0003*t))^2)
+b.1 <- sum((y-100)*t)
+b.2 <- sum((y-100)*(1-exp(-0.0003*t)))
+
+best.a2 <- (c.11*b.2 - c.12*b.1)/(c.11*c.22 - c.12^2) 
+best.a1 <- (b.1 - c.12*best.a2)/c.11 
+
+f6 <- function(x,a0=100,a1=0,a2=1){
+  a0 + a1*x + a2*(1-exp(-0.0003*x))
+}
+
+a0 <- 100
+a1 <- best.a1
+a2 <- best.a2
+
+x <- seq(-10,80001,2)
+par(mfrow=c(1,2),mar=c(2.5,2.5,1,0.25))
+plot(t,y,xlab="Hour ", ylab="Intensity(%) ", pch=16,main='f6')
+lines(x,f6(x,a0,a1,a2),col=2)
+plot(t,y,xlab="Hour ", ylab="Intensity(%) ", pch=16, xlim = c(-10,80000),ylim = c(-10,120))
+lines(x,f6(x,a0,a1,a2),col=2)
+```
+
+## Predicting Intensity after 25,000 Hours
+
+```{r}
+function_name <- c("f1","f2","f4", "f5", "f6")
+Luminocity25000Hours <- c(111.8211, 47.64489, 101.2126, 71.43408, 92.44049)
+
+data.frame(function_name, Luminocity25000Hours)
+```
+
